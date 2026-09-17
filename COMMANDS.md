@@ -39,7 +39,8 @@ a category, and they are what the discount-coverage views measure.
 ## 3. Validating the chart palette
 
 The eight categorical hues were checked for colorblind separation before being
-written into the theme, in both modes:
+written into the theme, in both modes. The validator ships with the `dataviz`
+skill, not this repo, so it is run from that skill's directory:
 
 ```bash
 node scripts/validate_palette.js "#2a78d6,#eb6834,#1baf7a,#eda100,#e87ba4,#008300,#4a3aa7,#e34948" --mode light
