@@ -11,8 +11,10 @@ from dashboard.data import (
     best_per_category,
     brand_coverage,
     category_distribution,
+    data_gaps,
     deals_of_the_day,
     discount_info_coverage,
+    headline_findings,
     load_deals,
     snapshot_time,
 )
@@ -101,12 +103,33 @@ with st.container(horizontal=True):
         border=True,
     )
 
+# --- The read ----------------------------------------------------------------
+
+st.header("What the data says", icon=":material/lightbulb:")
+st.caption("Recomputed against the current filters.")
+
+findings = headline_findings(view)
+if not findings:
+    st.caption("Not enough matching data to draw conclusions from.")
+else:
+    for row_start in range(0, len(findings), 2):
+        with st.container(horizontal=True):
+            for finding in findings[row_start : row_start + 2]:
+                with st.container(border=True):
+                    st.markdown(finding)
+
+gaps = data_gaps(view)
+if gaps:
+    with st.expander("What this data cannot tell you", icon=":material/help:"):
+        for gap in gaps:
+            st.markdown(f"- {gap}")
+
 # --- Deals of the day --------------------------------------------------------
 
 st.header("Today's picks", icon=":material/bolt:")
 st.caption(
-    "Ranked by deal score — discount depth, rating and review volume — with "
-    "expiring lightning deals first."
+    "Discounted, still available, deepest discount first — with expiring "
+    "lightning deals promoted to the front."
 )
 
 picks = deals_of_the_day(view, limit=6)
@@ -266,7 +289,6 @@ with st.expander("Browse the full feed", icon=":material/table_rows:"):
                 "deal_price",
                 "list_price",
                 "discount_pct",
-                "rating",
                 "hours_remaining",
                 "product_url",
             ]
@@ -280,7 +302,6 @@ with st.expander("Browse the full feed", icon=":material/table_rows:"):
             "deal_price": st.column_config.NumberColumn("Deal", format="$%.2f"),
             "list_price": st.column_config.NumberColumn("List", format="$%.2f"),
             "discount_pct": st.column_config.NumberColumn("Discount", format="%.0f%%"),
-            "rating": st.column_config.NumberColumn("Rating", format="%.1f"),
             "hours_remaining": st.column_config.NumberColumn("Hours left", format="%.1f"),
             "product_url": st.column_config.LinkColumn("Link", display_text="Open"),
         },
