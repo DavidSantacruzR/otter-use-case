@@ -1,0 +1,7 @@
+# Dashboard (this is what Streamlit Community Cloud installs).
+streamlit>=1.57
+pandas>=2.0
+altair>=5.0
+
+# Scraper, used by main.py to refresh amazon_deals.csv.
+requests>=2.31
